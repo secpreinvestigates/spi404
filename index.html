@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SecurityPress.se – Sidan finns inte</title>
+<link href="https://fonts.cdnfonts.com/css/instrument-sans" rel="stylesheet">
 <style>
   body {
-    font-family: 'Georgia', serif;
+    font-family: 'Instrument Sans', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -14,11 +15,15 @@
     line-height: 1.6;
   }
 
+  h1, h2 {
+    font-family: 'Georgia', serif;
+  }
+
   header {
     background-color: #fff;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
 
   header img {
@@ -31,7 +36,7 @@
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     border-radius: 6px;
     text-align: center;
   }
@@ -57,26 +62,75 @@
     text-decoration: underline;
   }
 
+  .btn-primary {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: #3498db;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-top: 1rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #217dbb;
+  }
+
   .socials {
     margin-top: 1.5rem;
+    text-align: center;
   }
 
   .socials a {
+    display: inline-block;
     margin: 0 0.5rem;
-    text-decoration: none;
-    color: #111;
+    font-size: 1.3rem; /* Lite större text */
     font-weight: bold;
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s;
   }
 
   .socials a.facebook:hover { color: #1877f2; }
   .socials a.youtube:hover { color: #ff0000; }
   .socials a.bluesky:hover { color: #0285ff; }
 
+  .rss-section {
+    max-width: 700px;
+    margin: 30px auto 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    text-align: left;
+  }
+
+  .rss-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #rss-feed li {
+    margin-bottom: 0.5rem;
+  }
+
+  #rss-feed li a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  #rss-feed li a:hover {
+    text-decoration: underline;
+  }
+
   footer {
     text-align: center;
     padding: 15px 10px;
     background-color: #fff;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     margin-top: 20px;
     font-size: 0.9rem;
     color: #555;
@@ -90,21 +144,52 @@
 
 <main>
   <h1>404 – Sidan finns inte</h1>
-  <p>Tyvärr är <strong>securitypress.se</strong> inte tillgänglig just nu.</p>
-  <p>För senaste nyheter och uppdateringar, besök: 
-    <strong><a href="https://tobylundqvist.wordpress.com" target="_blank">tobylundqvist.wordpress.com</a></strong>
-  </p>
+  <p>Sidan <strong>securitypress.se</strong> är för tillfället otillgänglig.<br>
+  För nyheter och senaste artiklar, tryck på knappen nedan för att gå till WordPress-sidan.</p>
+  <a href="https://tobylundqvist.wordpress.com" target="_blank" class="btn-primary">
+    Tryck här för att komma vidare till sidan
+  </a>
 </main>
 
+<div class="rss-section">
+  <h2>Senaste från SecurityPress Investigates</h2>
+  <p>Håll dig uppdaterad med våra senaste artiklar:</p>
+  <ul id="rss-feed"></ul>
+</div>
+
+<script>
+  const feedUrl = 'https://tobylundqvist.wordpress.com/feed/';
+  const feedContainer = document.getElementById('rss-feed');
+
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feedUrl))
+    .then(response => response.json())
+    .then(data => {
+      const items = data.items.slice(0,5);
+      items.forEach(item => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = item.link;
+        a.target = "_blank";
+        a.textContent = item.title;
+        li.appendChild(a);
+        feedContainer.appendChild(li);
+      });
+    })
+    .catch(err => {
+      feedContainer.innerHTML = '<li>Misslyckades med att ladda artiklar.</li>';
+      console.error(err);
+    });
+</script>
+
 <footer>
-  <p>Följ oss även här:</p>
   <div class="socials">
     <a href="https://www.facebook.com/profile.php?id=61566932249176" target="_blank" class="facebook">Facebook</a>
     <a href="https://www.youtube.com/channel/UCnRDOycVpblpSpJ9vW-bvCw" target="_blank" class="youtube">YouTube</a>
     <a href="https://bsky.app/profile/securitypress.se" target="_blank" class="bluesky">Bluesky</a>
   </div>
   <p><a href="https://tobylundqvist.wordpress.com/kontakta-oss/" target="_blank">Kontakta oss</a></p>
-  <p>&copy; 2025 SecurityPress.se – Sidan är otillgänglig</p>
+  <p>&copy; 2025 SecurityPress.se<br>
+  Ansvarig redaktör: Toby Lundqvist</p>
 </footer>
 </body>
 </html>
